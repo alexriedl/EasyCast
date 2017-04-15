@@ -2,52 +2,6 @@
 --          General Functions
 -------------------------------------------------------------
 ACTION_SLOT_ATTACK = 0
-function GetCooldownByName(name)
-  return GetSpellCooldown(SM_FindSpell(name))
-end
-function OffCooldown(name)
-  return GetCooldownByName(name) == 0
-end
-function GetRage()
-  return UnitMana("player")
-end
-function GetHealth(unit)
-  return UnitHealth(unit) / UnitHealthMax(unit) * 100.0
-end
-function MissingBuff(name, unit)
-  local _,hasBuff = FindBuff(name, unit)
-  return not hasBuff
-end
-function IsInCombat()
-  return UnitAffectingCombat("player")
-end
-function IsStanceActive(stance)
-  if(stance == nil or stance == 0) then
-    return false
-  end
-  _, _, active = GetShapeshiftFormInfo(stance);
-  return active
-end
-function ClearErrors()
-  UIErrorsFrame:Clear()
-end
-function AutoAttack()
-  if(not IsCurrentAction(ACTION_SLOT_ATTACK)) then
-    UseAction(ACTION_SLOT_ATTACK)
-  end
-end
-function FindActionByTexture(name)
-  local slotId = 0
-  for slotId = 1, 120 do
-    local texture = GetActionTexture(slotId)
-    if(texture) then
-      if(strfind(texture, name)) then
-        return slotId
-      end
-    end
-  end
-  return 0
-end
 
 -------------------------------------------------------------
 --          Warrior Functions
@@ -61,7 +15,7 @@ ACTION_SLOT_INTERCEPT = 0
 BATTLE_STANCE = 1
 DEFENSIVE_STANCE = 2
 BERSERKER_STANCE = 3
-ACTIVE_STANCE = BATLLE_STANCE
+ACTIVE_STANCE = 1
 STANCES = {
   [BATTLE_STANCE] = "Battle Stance",
   [DEFENSIVE_STANCE] = "Defensive Stance",
@@ -126,6 +80,17 @@ end
 function CastHeroicStrike()
   CastSpellWithRageAndCooldown("Heroic Strike", 15)
 end
+
+function ForceCastOverpower()
+  CastStanceSpell(BATTLE_STANCE, "Overpower", 5)
+end
+function ForceCastPummel()
+  CastStanceSpell(BERSERKER_STANCE, "Pummel", 10)
+end
+function ForceCastBerserkerRage()
+  CastStanceSpell(BERSERKER_STANCE, "Berserker Rage")
+end
+
 function SwitchToStance(stance) -- Returns true if already in correct stance
   if(not stance) then
     PrintColor(1, 0, 0, "Attempted to switch to NULL stance")
@@ -201,27 +166,19 @@ function WarriorAOERotation()
   CastCleave()
   ClearErrors()
 end
-function WarriorTankAggroRotation()
+function WarriorTankInstantThreat()
   AutoAttack()
-  CastRevenge()
-  CastHeroicStrike()
-  CastBloodrage()
-  ClearErrors()
+  if(IsStanceActive(DEFENSIVE_STANCE)) then
+    if(not (UnitIsUnit("player", "targettarget") == 1)) then
+      CastSpellByName("Taunt")
+    end
+  end
+
+  CastSpellByName("Sunder Armor")
 end
 function WarriorTankDPSRotation()
   AutoAttack()
-  CastBloodrage()
-  CastRevenge()
-  CastDemoralizingShout()
-  CastRend()
-  CastMortalStrike()
   ClearErrors()
-end
-function CastPummel()
-  CastStanceSpell(BERSERKER_STANCE, "Pummel", 10)
-end
-function CastBerserkerRage()
-  CastStanceSpell(BERSERKER_STANCE, "Berserker Rage")
 end
 function CastSuperCharge()
   local time = GetTime()
@@ -269,9 +226,11 @@ function Custom_Warrior_Init()
 
   if(ACTION_SLOT_CHARGE == 0) then
     PrintColor(1, 0, 0, "Charge must be on the action bar for all macros to work correctly")
+    ACTION_SLOT_CHARGE = 35
   end
   if(ACTION_SLOT_INTERCEPT == 0) then
     PrintColor(1, 0, 0, "Intercept must be on the action bar for all macros to work correctly")
+    ACTION_SLOT_INTERCEPT = 34
   end
 end
 
@@ -279,6 +238,7 @@ function Custom_Init()
   s, b = SM_FindSpell("Attack")
   if(not s or not b) then
     PrintColor(1, 0, 0, "Attack must be on the action bar for all macros to work correctly")
+    ACTION_SLOT_ATTACK = 36
   else
     texture = GetSpellTexture(s, b)
     ACTION_SLOT_ATTACK = FindActionByTexture(texture)
