@@ -1,31 +1,32 @@
+local PLAYER_CLASS = UnitClass("player");
 
 
-
---------------------------------
---     Registered Events      --
---------------------------------
-local RegisteredEvents = {};
-
---[[
-function RegisteredEvents.UNIT_COMBAT(target, action, modifier, value, type)
-end
-]]
-
-local function RegisterClassEvents(registeredEvents)
-  local playerClass = UnitClass("player");
-  local classRegisters = {
-    Warrior = Warrior.RegisterEvents,
-  };
-  classRegisters[playerClass](registeredEvents);
-end
 
 --------------------------------
 --        System Setup        --
 --------------------------------
+local RegisteredEvents = {};
+function RegisteredEvents.PLAYER_ENTERING_WORLD()
+  local classOnLoad = {
+    Warrior = Warrior_OnLoad,
+  };
+  errors = classOnLoad[PLAYER_CLASS]();
+  if(not (errors == "")) then
+    _ERRORMESSAGE(errors);
+  end
+end
+
 local function EventHandler(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
   if(event) then
     RegisteredEvents[event](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
   end
+end
+
+local function RegisterClassEvents(registeredEvents)
+  local classRegisters = {
+    Warrior = Warrior_RegisterEvents,
+  };
+  classRegisters[PLAYER_CLASS](registeredEvents);
 end
 
 local function OnLoad(this)
@@ -46,6 +47,4 @@ EC = {
   OnLoad = OnLoad,
   OnEvent = EventHandler,
   OnUpdate = OnUpdate,
-
-  Warrior = Warrior,
 }
