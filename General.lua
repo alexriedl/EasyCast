@@ -1,4 +1,16 @@
 ----------------------
+--  Global Helpers  --
+----------------------
+function EasyCast_PrintC(msg, r, g, b)
+  DEFAULT_CHAT_FRAME:AddMessage(msg, r, g, b);
+end
+function EasyCast_Print(msg)
+  EasyCast_PrintC(msg, 1, 1, 1);
+end
+print = EasyCast_Print;
+printc = EasyCast_PrintC;
+
+----------------------
 --  User Functions  --
 ----------------------
 

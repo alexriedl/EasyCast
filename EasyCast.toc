@@ -3,13 +3,11 @@
 ## Notes: Help with casting spells for different classes
 ## Version: 1.0
 
-# General
-# general_helpers.lua
+General.lua
 
 
 # Class specific functions
-warrior\setup.lua
-warrior\spells.lua
+Warrior.lua
 
 # Main Easy Cast
 EasyCast.lua
