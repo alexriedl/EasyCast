@@ -1,0 +1,16 @@
+## Interface: 11200
+## Title: |cFF3333FFEasy Cast|r|cFFFF0000 v1.00|r
+## Notes: Help with casting spells for different classes
+## Version: 1.0
+
+# General
+# general_helpers.lua
+
+
+# Class specific functions
+warrior\setup.lua
+warrior\spells.lua
+
+# Main Easy Cast
+EasyCast.lua
+EasyCast.xml
