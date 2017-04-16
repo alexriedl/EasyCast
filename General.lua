@@ -28,9 +28,37 @@ end
 ----------------------
 --  User Functions  --
 ----------------------
+function FindSpellByName(spell, rank) -- Returns (spell id, rank). rank parameter is optional, defults to highest rank
+  if(StringNullOrEmpty(name)) then return; end
+  spell = strlower(spell);
+  rank = StringDefault(rank, "");
+  local books = { BOOKTYPE_SPELL, BOOKTYPE_PET };
+  local id = 1;
+
+  for key, book in books do
+    while(spell) do
+      local foundSpell = false;
+      local foundRank = false;
+      local s, r = GetSpellName(id, book);
+      if(StringNullOrEmpty(s)) then
+        id = 1;
+        break;
+      end
+      if(strlower(s) == spell) then foundSpell = true; end
+      if((r == rank) or (r and rank and strlower(r) == strlower(rank))) then foundRank = true; end
+      if((rank == "") and foundSpell and (not GetSpellName(id+1, book) or strlower(GetSpellName(id+1, book)) ~= strlower(spell))) then
+        foundRank = true;
+      end
+      if(foundSpell and foundRank) then
+        return id, book;
+      end
+      id = id + 1;
+    end
+  end
+end
 
 function GetCooldownByName(name)
-  return GetSpellCooldown(SM_FindSpell(name))
+  return GetSpellCooldown(FindSpellByName(name))
 end
 
 function IsOffCooldown(name)

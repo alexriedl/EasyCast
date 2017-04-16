@@ -169,7 +169,7 @@ function CastSuperCharge()
 
   -- Prevent attempting to charge too early (like during a charge)
   if(time - LAST_CHARGE_TIME < CHARGE_DELAY_TIME) then
-    SwitchToActiveStance();
+    Warrior_SwitchToActiveStance();
     return false;
   end
 
@@ -179,18 +179,18 @@ function CastSuperCharge()
   local isIntercepting = IsCurrentAction(ACTION_SLOT_INTERCEPT) == 1;
   local canChargeOrIntercept = inRange and not (isCharging or isIntercepting);
   if(not canChargeOrIntercept) then
-    SwitchToActiveStance();
+    Warrior_SwitchToActiveStance();
     return
   end
 
   -- Cast correct charge
   local charged = false;
   if(IsInCombat()) then
-    if(CastStanceSpell(BERSERKER_STANCE, "Intercept", 10)) then
+    if(Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Intercept", 10)) then
       charged = IsCurrentAction(ACTION_SLOT_INTERCEPT) == 1;
     end
   else
-    if(CastStanceSpell(BATTLE_STANCE, "Charge")) then
+    if(Warrior_RotationCastStanceSpell(BATTLE_STANCE, "Charge")) then
       charged = IsCurrentAction(ACTION_SLOT_CHARGE) == 1;
     end
   end
@@ -202,7 +202,7 @@ function CastSuperCharge()
 end
 function InstantThreat()
   AutoAttack()
-  if(IsStanceActive(DEFENSIVE_STANCE)) then
+  if(Warrior_IsStanceActive(DEFENSIVE_STANCE)) then
     if(not (UnitIsUnit("player", "targettarget") == 1)) then
       CastSpellByName("Taunt")
     end
