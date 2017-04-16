@@ -35,11 +35,6 @@ local function Warrior_IsStanceActive(stance)
   _, _, active = GetShapeshiftFormInfo(stance);
   return active;
 end
-
-
---------------------------------
---     Cast Spell Helpers     --
---------------------------------
 local function Warrior_SwitchToStance(stance) -- Returns true if already in correct stance
   if(not stance) then
     printc("Attempted to switch to NULL stance", 1, 0, 0);
@@ -167,6 +162,43 @@ function ForceCastBerserkerRage()
   Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Berserker Rage");
 end
 
+function CastSuperCharge()
+  local time = GetTime();
+
+  -- Prevent attempting to charge too early (like during a charge)
+  if(time - LAST_CHARGE_TIME < CHARGE_DELAY_TIME) then
+    SwitchToActiveStance();
+    return false;
+  end
+
+  -- Both Charge and Intercept have the same range
+  local inRange = IsActionInRange(ACTION_SLOT_CHARGE) == 1;
+  local isCharging = IsCurrentAction(ACTION_SLOT_CHARGE) == 1;
+  local isIntercepting = IsCurrentAction(ACTION_SLOT_INTERCEPT) == 1;
+  local canChargeOrIntercept = inRange and not (isCharging or isIntercepting);
+  if(not canChargeOrIntercept) then
+    SwitchToActiveStance();
+    return
+  end
+
+  -- Cast correct charge
+  local charged = false;
+  if(IsInCombat()) then
+    if(CastStanceSpell(BERSERKER_STANCE, "Intercept", 10)) then
+      charged = IsCurrentAction(ACTION_SLOT_INTERCEPT) == 1;
+    end
+  else
+    if(CastStanceSpell(BATTLE_STANCE, "Charge")) then
+      charged = IsCurrentAction(ACTION_SLOT_CHARGE) == 1;
+    end
+  end
+
+  -- Mark charge time only if charge was casted
+  if(charged) then
+    LAST_CHARGE_TIME = time;
+  end
+end
+
 local WarriorEvents = {};
 function WarriorEvents.UNIT_COMBAT(target, action, modifier, value, type)
   if(target == 'target' and action == 'DODGE') then
@@ -181,6 +213,21 @@ function Warrior_RegisterEvents(registeredEvents)
 end
 
 function Warrior_OnLoad()
-  print("Setting up UI stuffs for warrior");
-  return "1. Cant find intercept\n2. Cant find charge\n3. Cant find attack";
+  ACTION_SLOT_CHARGE = FindActionByTexture("Ability_Warrior_Charge")
+  ACTION_SLOT_INTERCEPT = FindActionByTexture("Ability_Rogue_Sprint")
+
+  errors = "";
+  index = 1;
+
+  if(ACTION_SLOT_CHARGE == 0) then
+    errors = errors .. index .. ": Missing Charge on Action Bars\n";
+    index = index + 1;
+    ACTION_SLOT_CHARGE = 35
+  end
+  if(ACTION_SLOT_INTERCEPT == 0) then
+    errors = errors .. index .. ": Missing Intercept on Action Bars\n";
+    index = index + 1;
+    ACTION_SLOT_INTERCEPT = 34
+  end
+  return errors;
 end

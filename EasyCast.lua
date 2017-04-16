@@ -11,7 +11,7 @@ function RegisteredEvents.PLAYER_ENTERING_WORLD()
     Warrior = Warrior_OnLoad,
   };
   errors = classOnLoad[PLAYER_CLASS]();
-  if(not (errors == "")) then
+  if(errors and not (errors == "")) then
     _ERRORMESSAGE(errors);
   end
 end

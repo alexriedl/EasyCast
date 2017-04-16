@@ -7,12 +7,20 @@ end
 function EC_Print(msg)
   EC_PrintC(msg, 1, 1, 1);
 end
-print = EC_Print;
-printc = EC_PrintC;
 function EC_Error(msg)
   _ERRORMESSAGE(msg);
 end
+printc = EC_PrintC;
+print = EC_Print;
 printe = EC_error;
+
+function StringDefault(value, default)
+  if(not value or value == "") then
+    return default;
+  else
+    return value;
+  end
+end
 
 ----------------------
 --  User Functions  --
@@ -55,6 +63,34 @@ end
 
 function ClearErrors()
   UIErrorsFrame:Clear()
+end
+
+function HasBuff(unit, buff) -- Returns (Type [buff, debuf], Index, Buff Name)
+  if(not buff) then return; end
+  buff = strlower(buff);
+  unit = StringDefault(unit, "player");
+
+  local tooltip = EC_Tooltip;
+  local tooltipTitle = getglobal(tooltip:GetName() .. "TextLeft1");
+
+  for i=1, 40 do
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+    tooltip:SetUnitBuff(unit, i);
+    local name = tooltipTitle:GetText();
+    tooltip:Hide();
+    if(name and strfind(strlower(name), buff)) then
+      return "buff", i, name;
+    end
+  end
+  for i=1, 40 do
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+    tooltip:SetUnitDebuff(unit, i);
+    local name = tooltipTitle:GetText();
+    tooltip:Hide();
+    if(name and strfind(strlower(name), buff)) then
+      return "debuff", i, name;
+    end
+  end
 end
 
 --------------------------
