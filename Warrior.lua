@@ -53,7 +53,7 @@ local function Warrior_SwitchToActiveStance() -- Returns true if already in corr
   end
   return Warrior_SwitchToStance(ACTIVE_STANCE);
 end
-local function Warrior_RotationCastStanceSpell(stance, spell, rage) -- Returns true if desired spell was casted
+local function Warrior_ForceCastStanceSpell(stance, spell, rage) -- Returns true if desired spell was casted
   if(rage == nil) then rage = 0 end
   if(rage > 0 and GetRage() < rage or not IsOffCooldown(spell)) then
     Warrior_SwitchToActiveStance();
@@ -98,6 +98,7 @@ end
 --------------------------------
 function RotationCastOverpower()
   local targetName = GetName("target");
+  -- TODO: Dodge checks needed in rotation overpower?
   if(targetName == LAST_TARGET_DODGE_NAME and LAST_TARGET_DODGE_TIME + 5 > GetTime()) then
     Warrior_RotationSpellWithRageAndCooldown("Overpower", 5);
     targetName = nil;
@@ -115,24 +116,18 @@ function RotationCastBloodrage()
   end
 end
 function RotationCastBattleShout()
-  local rage = 10;
-  local spell = "Battle Shout";
-  if(GetRage() >= rage and MissingBuff(spell)) then
-    CastSpellByName(spell);
+  if(MissingBuff(spell)) then
+    Warrior_RotationSpellWithRageAndCooldown("Battle Shout", 10);
   end
 end
 function RotationCastDemoralizingShout()
-  local rage = 10;
-  local spell = "Demoralizing Shout";
-  if(DEM_SHOUT_ENABLED and GetRage() >= rage and GetHealth("target") > 10 and MissingBuff(spell, "target")) then
-    CastSpellByName(spell);
+  if(DEM_SHOUT_ENABLED and GetHealth("target") > 10 and MissingBuff(spell, "target")) then
+    Warrior_RotationSpellWithRageAndCooldown("Demoralizing Shout", 10);
   end
 end
 function RotationCastRend()
-  local rage = 10;
-  local spell = "Rend";
-  if(REND_ENABLED and GetRage() >= rage and MissingBuff(spell, "target") and GetHealth("target") > 20) then
-    CastSpellByName(spell);
+  if(REND_ENABLED and MissingBuff(spell, "target") and GetHealth("target") > 25) then
+    Warrior_RotationSpellWithRageAndCooldown("Rend", 10);
   end
 end
 function RotationCastMortalStrike()
@@ -152,13 +147,13 @@ function RotationCastHeroicStrike()
 end
 
 function ForceCastOverpower()
-  Warrior_RotationCastStanceSpell(BATTLE_STANCE, "Overpower", 5);
+  Warrior_ForceCastStanceSpell(BATTLE_STANCE, "Overpower", 5);
 end
 function ForceCastPummel()
-  Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Pummel", 10);
+  Warrior_ForceCastStanceSpell(BERSERKER_STANCE, "Pummel", 10);
 end
 function ForceCastBerserkerRage()
-  Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Berserker Rage");
+  Warrior_ForceCastStanceSpell(BERSERKER_STANCE, "Berserker Rage");
 end
 
 --------------------------------
@@ -186,11 +181,11 @@ function CastSuperCharge()
   -- Cast correct charge
   local charged = false;
   if(IsInCombat()) then
-    if(Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Intercept", 10)) then
+    if(Warrior_ForceCastStanceSpell(BERSERKER_STANCE, "Intercept", 10)) then
       charged = IsCurrentAction(ACTION_SLOT_INTERCEPT) == 1;
     end
   else
-    if(Warrior_RotationCastStanceSpell(BATTLE_STANCE, "Charge")) then
+    if(Warrior_ForceCastStanceSpell(BATTLE_STANCE, "Charge")) then
       charged = IsCurrentAction(ACTION_SLOT_CHARGE) == 1;
     end
   end
