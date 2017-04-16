@@ -1,4 +1,3 @@
-
 --------------------------------
 --           Globals          --
 --------------------------------
@@ -162,6 +161,9 @@ function ForceCastBerserkerRage()
   Warrior_RotationCastStanceSpell(BERSERKER_STANCE, "Berserker Rage");
 end
 
+--------------------------------
+--   Advanced Spell Casting   --
+--------------------------------
 function CastSuperCharge()
   local time = GetTime();
 
@@ -198,7 +200,20 @@ function CastSuperCharge()
     LAST_CHARGE_TIME = time;
   end
 end
+function InstantThreat()
+  AutoAttack()
+  if(IsStanceActive(DEFENSIVE_STANCE)) then
+    if(not (UnitIsUnit("player", "targettarget") == 1)) then
+      CastSpellByName("Taunt")
+    end
+  end
 
+  CastSpellByName("Sunder Armor")
+end
+
+--------------------------------
+--           Setup            --
+--------------------------------
 local WarriorEvents = {};
 function WarriorEvents.UNIT_COMBAT(target, action, modifier, value, type)
   if(target == 'target' and action == 'DODGE') then
@@ -213,8 +228,9 @@ function Warrior_RegisterEvents(registeredEvents)
 end
 
 function Warrior_OnLoad()
-  ACTION_SLOT_CHARGE = FindActionByTexture("Ability_Warrior_Charge")
-  ACTION_SLOT_INTERCEPT = FindActionByTexture("Ability_Rogue_Sprint")
+  ACTION_SLOT_CHARGE = FindActionByName("Charge")
+  ACTION_SLOT_INTERCEPT = FindActionByName("Intercept")
+  ACTION_SLOT_ATTACK = FindActionByName("Attack")
 
   errors = "";
   index = 1;
@@ -229,5 +245,11 @@ function Warrior_OnLoad()
     index = index + 1;
     ACTION_SLOT_INTERCEPT = 34
   end
+  if(ACTION_SLOT_ATTACK == 0) then
+    errors = errors .. index .. ": Missing Attack on Action Bars\n";
+    index = index + 1;
+    ACTION_SLOT_ATTACK = 36
+  end
+
   return errors;
 end

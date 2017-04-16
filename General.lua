@@ -21,6 +21,9 @@ function StringDefault(value, default)
     return value;
   end
 end
+function StringNullOrEmpty(value)
+  return value == "";
+end
 
 ----------------------
 --  User Functions  --
@@ -55,7 +58,7 @@ function IsInCombat()
   return UnitAffectingCombat("player")
 end
 
-function AutoAttack()
+function AutoAttack() -- TODO: Move global to a better spot
   if(not IsCurrentAction(ACTION_SLOT_ATTACK)) then
     UseAction(ACTION_SLOT_ATTACK)
   end
@@ -66,14 +69,14 @@ function ClearErrors()
 end
 
 function HasBuff(unit, buff) -- Returns (Type [buff, debuf], Index, Buff Name)
-  if(not buff) then return; end
+  if(StringNullOrEmpty(buff)) then return; end
   buff = strlower(buff);
   unit = StringDefault(unit, "player");
 
   local tooltip = EC_Tooltip;
   local tooltipTitle = getglobal(tooltip:GetName() .. "TextLeft1");
 
-  for i=1, 40 do
+  for i = 1, 40 do
     tooltip:SetOwner(UIParent, "ANCHOR_NONE");
     tooltip:SetUnitBuff(unit, i);
     local name = tooltipTitle:GetText();
@@ -82,13 +85,30 @@ function HasBuff(unit, buff) -- Returns (Type [buff, debuf], Index, Buff Name)
       return "buff", i, name;
     end
   end
-  for i=1, 40 do
+  for i = 1, 40 do
     tooltip:SetOwner(UIParent, "ANCHOR_NONE");
     tooltip:SetUnitDebuff(unit, i);
     local name = tooltipTitle:GetText();
     tooltip:Hide();
     if(name and strfind(strlower(name), buff)) then
       return "debuff", i, name;
+    end
+  end
+end
+
+function FindActionByName(name) -- Returns (Slot ID, Name) if found
+  if(StringNullOrEmpty(name)) then return; end
+  name = strlower(name);
+
+  local tooltip = EC_Tooltip;
+  local tooltipTitle = getglobal(tooltip:GetName() .. "TextLeft1");
+
+  for i = 1, 120 do
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+    tooltip:SetAction(i);
+    local action = tooltipTitle:GetText();
+    if(action and strfind(strlower(action), name)) then
+      return i, action;
     end
   end
 end
