@@ -222,29 +222,14 @@ function Warrior_RegisterEvents(registeredEvents)
   end
 end
 
-function Warrior_OnLoad()
+function Warrior_OnLoad(errorlist)
   ACTION_SLOT_CHARGE = FindActionByName("Charge")
   ACTION_SLOT_INTERCEPT = FindActionByName("Intercept")
-  ACTION_SLOT_ATTACK = FindActionByName("Attack")
 
-  errors = "";
-  index = 1;
-
-  if(ACTION_SLOT_CHARGE == 0) then
-    errors = errors .. index .. ": Missing Charge on Action Bars\n";
-    index = index + 1;
-    ACTION_SLOT_CHARGE = 35
+  if(not ACTION_SLOT_CHARGE) then
+    table.insert(errorlist, "Missing Charge on Action Bars");
   end
-  if(ACTION_SLOT_INTERCEPT == 0) then
-    errors = errors .. index .. ": Missing Intercept on Action Bars\n";
-    index = index + 1;
-    ACTION_SLOT_INTERCEPT = 34
+  if(not ACTION_SLOT_INTERCEPT) then
+    table.insert(errorlist, "Missing Intercept on Action Bars");
   end
-  if(ACTION_SLOT_ATTACK == 0) then
-    errors = errors .. index .. ": Missing Attack on Action Bars\n";
-    index = index + 1;
-    ACTION_SLOT_ATTACK = 36
-  end
-
-  return errors;
 end

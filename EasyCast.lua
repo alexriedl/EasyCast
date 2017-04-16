@@ -7,12 +7,28 @@ local PLAYER_CLASS = UnitClass("player");
 --------------------------------
 local RegisteredEvents = {};
 function RegisteredEvents.PLAYER_ENTERING_WORLD()
+  errorlist = {};
+
+  -- Class Setup
   local classOnLoad = {
     Warrior = Warrior_OnLoad,
   };
-  errors = classOnLoad[PLAYER_CLASS]();
-  if(errors and not (errors == "")) then
-    _ERRORMESSAGE(errors);
+  classOnLoad[PLAYER_CLASS](errorlist);
+
+  -- General Setup
+  ACTION_SLOT_ATTACK = FindActionByName("Attack")
+  if(not ACTION_SLOT_ATTACK) then
+    table.insert(errorlist, "Missing Attack on Action Bars");
+  end
+
+  -- Check for/display errors
+  local errormsg = "";
+  for k, v in errorlist do
+    errormsg = errormsg .. k .. ": " .. v .. "\n";
+  end
+
+  if(not (errormsg == "")) then
+    printe("EasyCast Errors:\n" .. errormsg);
   end
 end
 

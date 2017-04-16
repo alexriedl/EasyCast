@@ -1,18 +1,18 @@
 ----------------------
 --  Global Helpers  --
 ----------------------
-function EC_PrintC(msg, r, g, b)
+function EC_PrintColor(msg, r, g, b)
   DEFAULT_CHAT_FRAME:AddMessage(msg, r, g, b);
 end
 function EC_Print(msg)
-  EC_PrintC(msg, 1, 1, 1);
+  EC_PrintColor(msg, 1, 1, 1);
 end
-function EC_Error(msg)
+function EC_PrintError(msg)
   _ERRORMESSAGE(msg);
 end
-printc = EC_PrintC;
+printc = EC_PrintColor;
 print = EC_Print;
-printe = EC_error;
+printe = EC_PrintError;
 
 function StringDefault(value, default)
   if(not value or value == "") then
