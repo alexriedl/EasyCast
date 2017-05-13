@@ -13,7 +13,9 @@ function RegisteredEvents.PLAYER_ENTERING_WORLD()
   local classOnLoad = {
     Warrior = Warrior_OnLoad,
   };
-  classOnLoad[PLAYER_CLASS](errorlist);
+  if(classOnLoad[PLAYER_CLASS]) then
+    classOnLoad[PLAYER_CLASS](errorlist);
+  end
 
   -- General Setup
   ACTION_SLOT_ATTACK = FindActionByName("Attack")
@@ -42,7 +44,9 @@ local function RegisterClassEvents(registeredEvents)
   local classRegisters = {
     Warrior = Warrior_RegisterEvents,
   };
-  classRegisters[PLAYER_CLASS](registeredEvents);
+  if(classRegisters[PLAYER_CLASS]) then
+    classRegisters[PLAYER_CLASS](registeredEvents);
+  end
 end
 
 local function OnLoad(this)
