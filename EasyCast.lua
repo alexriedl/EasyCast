@@ -1,6 +1,6 @@
 local PLAYER_CLASS = UnitClass("player");
 
-local function RegisterMacros()
+local function SetupMacros()
   local macros = {};
   local classRegisters = {
     Warrior = Warrior_SetupMacros,
@@ -11,6 +11,24 @@ local function RegisterMacros()
   SyncMacros(macros);
 end
 
+SLASH_EASYCAST1, SLASH_EASYCAST2 = '/easycast', '/ec';
+local function ChatHandler(msg, editbox)
+  local title = "\124c00997700";
+  local info = "\124c00ffffff";
+  if(StringNullOrEmpty(msg)) then
+    print(title .. "Usage: " .. info .. "/ec {macrosync | about}");
+    print(title .. "-macrosync: " .. info .. "Sync EasyCast Macros with player macros");
+    print(title .. "-about: " .. info .. "Display information about this addon");
+  elseif(msg == "macrosync") then
+    SetupMacros();
+    print("Macros Synced!");
+  elseif(msg == "about") then
+    printc("EasyCast!! By Alex", 1, .8, 0);
+  else
+    printc("Unknown EasyCast command! Type '/ec' for more information", 1, 0, 0);
+  end
+end
+SlashCmdList["EASYCAST"] = ChatHandler;
 
 --------------------------------
 --        System Setup        --
@@ -32,8 +50,6 @@ function RegisteredEvents.PLAYER_ENTERING_WORLD()
   if(not ACTION_SLOT_ATTACK) then
     table.insert(errorlist, "Missing Attack on Action Bars");
   end
-
-  RegisterMacros();
 
   -- Check for/display errors
   local errormsg = "";

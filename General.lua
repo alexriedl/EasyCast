@@ -22,7 +22,7 @@ function StringDefault(value, default)
   end
 end
 function StringNullOrEmpty(value)
-  return value == "";
+  return value == nil or value == "";
 end
 
 ----------------------
