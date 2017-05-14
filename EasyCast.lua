@@ -1,5 +1,15 @@
 local PLAYER_CLASS = UnitClass("player");
 
+local function RegisterMacros()
+  local macros = {};
+  local classRegisters = {
+    Warrior = Warrior_SetupMacros,
+  };
+  if(classRegisters[PLAYER_CLASS]) then
+    classRegisters[PLAYER_CLASS](macros);
+  end
+  SyncMacros(macros);
+end
 
 
 --------------------------------
@@ -22,6 +32,8 @@ function RegisteredEvents.PLAYER_ENTERING_WORLD()
   if(not ACTION_SLOT_ATTACK) then
     table.insert(errorlist, "Missing Attack on Action Bars");
   end
+
+  RegisterMacros();
 
   -- Check for/display errors
   local errormsg = "";
@@ -54,6 +66,7 @@ local function OnLoad(this)
   for k, v in pairs(RegisteredEvents) do
     this:RegisterEvent(k);
   end
+
   printc("EasyCast Loaded!", 1, 0.8, 0);
 end
 

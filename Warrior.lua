@@ -233,3 +233,18 @@ function Warrior_OnLoad(errorlist)
     table.insert(errorlist, "Missing Intercept on Action Bars");
   end
 end
+
+function Warrior_SetupMacros(macros)
+  macros["warrior_set_battle"]            = { icon = 159, body = "/run SetBattleStance()" };
+  macros["warrior_set_defensive"]         = { icon = 156, body = "/run SetDefensiveStance()" };
+
+  macros["warrior_toggle_demshout"]       = { icon = 167, body = "/run ToggleDemoralizingShout()" };
+  macros["warrior_toggle_rend"]           = { icon = 50,  body = "/run ToggleRend()" };
+
+  macros["warrior_cast_charge"]           = { icon = 153, body = "/run CastSuperCharge()" };
+  macros["warrior_cast_intercept"]        = { icon = 130, body = "/run CastSuperCharge()" };
+  macros["warrior_cast_taunt"]            = { icon = 402, body = "/run InstantThreat()" };
+
+  macros["warrior_cast_berserker"]        = { icon = 344, body = "/run ForceCastBerserkerRage()" };
+  macros["warrior_cast_overpower"]        = { icon = 88,  body = "/run ForceCastOverpower()" };
+end

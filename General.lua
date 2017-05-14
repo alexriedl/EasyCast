@@ -157,16 +157,6 @@ function FindActionByTexture(name)
   return 0
 end
 
-
-function MacroTester()
-  SyncMacros({
-    testmacro = { icon = 2, body = "/run -- My Super Test Macro" },
-    myOtherMacro = { icon = 2, body = "/run -- asdfasdf" },
-  });
-end
-
-
-
 ----------------------
 -- Macros Functions --
 ----------------------
@@ -183,7 +173,7 @@ function SyncMacros(macros)
       local id = GetEasyCastId(body);
       local macro = macros[id];
 
-      if(macro) then
+      if(macro and macro.body and macro.icon) then
         SetupMacro(id, macro, index);
         macros[id] = nil;
       else
@@ -200,11 +190,7 @@ function SyncMacros(macros)
   end
 end
 
-function SetupMacro(id, macro, index) -- if index is null, a new macro will be created
-  if(not (macro.body and macro.icon)) then
-    return;
-  end
-
+function SetupMacro(id, macro, index) -- if index is null, a new macro will be created. Macro { icon = <int>, body = <string> }
   local body = MACRO_PREFIX .. id .. "\n/run -- Test macro is managed by EasyCast. Do not edit it\n" .. macro.body;
   local name = MACRO_NEXT_AVAILABLE_NAME;
   local icon = macro.icon;
@@ -226,4 +212,15 @@ end
 function GetEasyCastId(body)
   endOfFirstLine, lines = string.find(body, "\n");
   return string.sub(body, MACRO_PREFIX_LENGTH + 1, endOfFirstLine - 1)
+end
+
+function GetMacroIconIndex(name)
+  local index = GetMacroIndexByName(name);
+  local n, icon, body = GetMacroInfo(index)
+  for iconIndex = 1, GetNumMacroIcons() do
+    local t = GetMacroIconInfo(iconIndex);
+    if(t == icon) then
+      print("Icon for " .. name .. " is " .. iconIndex);
+    end
+  end
 end
