@@ -162,11 +162,8 @@ end
 ----------------------
 local MACRO_PREFIX = "/run -- EasyCastMacro -- #"
 local MACRO_PREFIX_LENGTH = string.len(MACRO_PREFIX);
-local MACRO_NEXT_AVAILABLE_NAME = " ";
 
 function SyncMacros(macros)
-  MACRO_NEXT_AVAILABLE_NAME = " ";
-
   for index = 1, 36 do
     local n, icon, body = GetMacroInfo(index)
     if(IsEasyCastMacro(body)) then
@@ -190,9 +187,9 @@ function SyncMacros(macros)
   end
 end
 
-function SetupMacro(id, macro, index) -- if index is null, a new macro will be created. Macro { icon = <int>, body = <string> }
+function SetupMacro(id, macro, index) -- if index is null, a new macro will be created. Macro { icon = <int>, name = <string>, body = <string> }
   local body = MACRO_PREFIX .. id .. "\n/run -- Test macro is managed by EasyCast. Do not edit it\n" .. macro.body;
-  local name = MACRO_NEXT_AVAILABLE_NAME;
+  local name = macro.name;
   local icon = macro.icon;
 
   if(index) then
@@ -200,7 +197,6 @@ function SetupMacro(id, macro, index) -- if index is null, a new macro will be c
   else
     CreateMacro(name, icon, body, 1, true);
   end
-  MACRO_NEXT_AVAILABLE_NAME = MACRO_NEXT_AVAILABLE_NAME .. " ";
 end
 
 function IsEasyCastMacro(body)

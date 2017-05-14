@@ -235,16 +235,16 @@ function Warrior_OnLoad(errorlist)
 end
 
 function Warrior_SetupMacros(macros)
-  macros["warrior_set_battle"]            = { icon = 159, body = "/run SetBattleStance()" };
-  macros["warrior_set_defensive"]         = { icon = 156, body = "/run SetDefensiveStance()" };
+  macros["warrior_set_battle"]      = { icon = 159, name = " ",         body = "/run SetBattleStance()" };
+  macros["warrior_set_defensive"]   = { icon = 156, name = "  ",        body = "/run SetDefensiveStance()" };
 
-  macros["warrior_toggle_demshout"]       = { icon = 167, body = "/run ToggleDemoralizingShout()" };
-  macros["warrior_toggle_rend"]           = { icon = 50,  body = "/run ToggleRend()" };
+  macros["warrior_toggle_demshout"] = { icon = 167, name = "   ",       body = "/run ToggleDemoralizingShout()" };
+  macros["warrior_toggle_rend"]     = { icon = 50,  name = "    ",      body = "/run ToggleRend()" };
 
-  macros["warrior_cast_charge"]           = { icon = 153, body = "/run CastSuperCharge()" };
-  macros["warrior_cast_intercept"]        = { icon = 130, body = "/run CastSuperCharge()" };
-  macros["warrior_cast_taunt"]            = { icon = 402, body = "/run InstantThreat()" };
+  macros["warrior_cast_charge"]     = { icon = 153, name = "     ",     body = "/run CastSuperCharge()" };
+  macros["warrior_cast_intercept"]  = { icon = 130, name = "      ",    body = "/run CastSuperCharge()" };
+  macros["warrior_cast_taunt"]      = { icon = 402, name = "       ",   body = "/run InstantThreat()" };
 
-  macros["warrior_cast_berserker"]        = { icon = 344, body = "/run ForceCastBerserkerRage()" };
-  macros["warrior_cast_overpower"]        = { icon = 88,  body = "/run ForceCastOverpower()" };
+  macros["warrior_cast_berserker"]  = { icon = 344, name = "        ",  body = "/run ForceCastBerserkerRage()" };
+  macros["warrior_cast_overpower"]  = { icon = 88,  name = "         ", body = "/run ForceCastOverpower()" };
 end

@@ -21,7 +21,7 @@ local function ChatHandler(msg, editbox)
     print(title .. "-about: " .. info .. "Display information about this addon");
   elseif(msg == "macrosync") then
     SetupMacros();
-    print("Macros Synced!");
+    printc("Macros Synced!", 1, .8, 0);
   elseif(msg == "about") then
     printc("EasyCast!! By Alex", 1, .8, 0);
   else
