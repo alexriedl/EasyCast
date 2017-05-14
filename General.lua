@@ -156,3 +156,74 @@ function FindActionByTexture(name)
   end
   return 0
 end
+
+
+function MacroTester()
+  SyncMacros({
+    testmacro = { icon = 2, body = "/run -- My Super Test Macro" },
+    myOtherMacro = { icon = 2, body = "/run -- asdfasdf" },
+  });
+end
+
+
+
+----------------------
+-- Macros Functions --
+----------------------
+local MACRO_PREFIX = "/run -- EasyCastMacro -- #"
+local MACRO_PREFIX_LENGTH = string.len(MACRO_PREFIX);
+local MACRO_NEXT_AVAILABLE_NAME = " ";
+
+function SyncMacros(macros)
+  MACRO_NEXT_AVAILABLE_NAME = " ";
+
+  for index = 1, 36 do
+    local n, icon, body = GetMacroInfo(index)
+    if(IsEasyCastMacro(body)) then
+      local id = GetEasyCastId(body);
+      local macro = macros[id];
+
+      if(macro) then
+        SetupMacro(id, macro, index);
+        macros[id] = nil;
+      else
+        DeleteMacro(index);
+      end
+
+    end
+  end
+
+  for id, macro in pairs(macros) do
+    if(macro) then
+      SetupMacro(id, macro);
+    end
+  end
+end
+
+function SetupMacro(id, macro, index) -- if index is null, a new macro will be created
+  if(not (macro.body and macro.icon)) then
+    return;
+  end
+
+  local body = MACRO_PREFIX .. id .. "\n/run -- Test macro is managed by EasyCast. Do not edit it\n" .. macro.body;
+  local name = MACRO_NEXT_AVAILABLE_NAME;
+  local icon = macro.icon;
+
+  if(index) then
+    EditMacro(index, name, icon, body, 1);
+  else
+    CreateMacro(name, icon, body, 1, true);
+  end
+  MACRO_NEXT_AVAILABLE_NAME = MACRO_NEXT_AVAILABLE_NAME .. " ";
+end
+
+function IsEasyCastMacro(body)
+  if(not body) then return false; end
+  local header = string.sub(body, 1, MACRO_PREFIX_LENGTH);
+  return (header == MACRO_PREFIX);
+end
+
+function GetEasyCastId(body)
+  endOfFirstLine, lines = string.find(body, "\n");
+  return string.sub(body, MACRO_PREFIX_LENGTH + 1, endOfFirstLine - 1)
+end
