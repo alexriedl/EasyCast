@@ -13,8 +13,8 @@ end
 
 SLASH_EASYCAST1, SLASH_EASYCAST2 = '/easycast', '/ec';
 local function ChatHandler(msg, editbox)
-  local title = "\124c00997700";
-  local info = "\124c00ffffff";
+  local title = "|c00997700";
+  local info = "|c00ffffff";
   if(StringNullOrEmpty(msg)) then
     print(title .. "Usage: " .. info .. "/ec {macrosync | about}");
     print(title .. "-macrosync: " .. info .. "Sync EasyCast Macros with player macros");
