@@ -5,8 +5,8 @@
 
 General.lua
 
-
 # Class specific functions
+Druid.lua
 Warrior.lua
 
 # Main Easy Cast

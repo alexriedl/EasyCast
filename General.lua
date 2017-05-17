@@ -65,12 +65,19 @@ function IsOffCooldown(name)
   return GetCooldownByName(name) == 0
 end
 
-function GetRage()
-  return UnitMana("player")
+function GetRage(unit)
+  StringDefault(unit, "player");
+  return UnitMana(unit)
 end
 
-function GetMana()
-  return UnitMana("player")
+function GetMana(unit)
+  StringDefault(unit, "player");
+  return UnitMana(unit)
+end
+
+function GetEnergy(unit)
+  StringDefault(unit, "player");
+  return UnitMana(unit)
 end
 
 function GetHealth(unit)
@@ -86,7 +93,20 @@ function IsInCombat()
   return UnitAffectingCombat("player")
 end
 
-function AutoAttack() -- TODO: Move global to a better spot
+function RotationSpellWithCost(spell)
+  if(GetMana() >= cost) then
+    CastSpellByName(spell);
+  end
+end
+
+function RotationSpellWithCostAndCooldown(spell, cost)
+  if(GetMana() >= cost and IsOffCooldown(spell)) then
+    CastSpellByName(spell);
+  end
+end
+
+ACTION_SLOT_ATTACK = 0
+function AutoAttack()
   if(not IsCurrentAction(ACTION_SLOT_ATTACK)) then
     UseAction(ACTION_SLOT_ATTACK)
   end
@@ -96,7 +116,7 @@ function ClearErrors()
   UIErrorsFrame:Clear()
 end
 
-function HasBuff(unit, buff) -- Returns (Type [buff, debuf], Index, Buff Name)
+function HasBuff(buff, unit) -- Returns (Type [buff, debuf], Index, Buff Name)
   if(StringNullOrEmpty(buff)) then return; end
   buff = strlower(buff);
   unit = StringDefault(unit, "player");

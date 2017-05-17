@@ -1,7 +1,6 @@
 --------------------------------
 --           Globals          --
 --------------------------------
-ACTION_SLOT_ATTACK = 0
 ACTION_SLOT_CHARGE = 0;
 ACTION_SLOT_INTERCEPT = 0;
 
