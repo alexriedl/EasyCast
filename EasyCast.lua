@@ -4,6 +4,7 @@ local function SetupMacros()
   local macros = {};
   local classRegisters = {
     Warrior = Warrior_SetupMacros,
+    Druid = Druid_SetupMacros,
   };
   if(classRegisters[PLAYER_CLASS]) then
     classRegisters[PLAYER_CLASS](macros);

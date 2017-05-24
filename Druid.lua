@@ -16,9 +16,12 @@ function RotationCastClaw(startAutoAttack)
 
   comboPoints = GetComboPoints();
   if(comboPoints >= 5) then
-    -- TODO: Verify this has a cost and/or cooldown
-    RotationSpellWithCostAndCooldown("Ferocious Bite", 30);
+    RotationSpellWithCost("Ferocious Bite", 35);
   else
     RotationSpellWithCost("Claw", 40);
   end
+end
+
+function Druid_SetupMacros(macros)
+  macros["druid_claw"]      = { icon = 038, name = " ",         body = "/run RotationCastClaw(true)" };
 end

@@ -66,17 +66,17 @@ function IsOffCooldown(name)
 end
 
 function GetRage(unit)
-  StringDefault(unit, "player");
+  unit = StringDefault(unit, "player");
   return UnitMana(unit)
 end
 
 function GetMana(unit)
-  StringDefault(unit, "player");
+  unit = StringDefault(unit, "player");
   return UnitMana(unit)
 end
 
 function GetEnergy(unit)
-  StringDefault(unit, "player");
+  unit = StringDefault(unit, "player");
   return UnitMana(unit)
 end
 
@@ -93,7 +93,7 @@ function IsInCombat()
   return UnitAffectingCombat("player")
 end
 
-function RotationSpellWithCost(spell)
+function RotationSpellWithCost(spell, cost)
   if(GetMana() >= cost) then
     CastSpellByName(spell);
   end
@@ -208,7 +208,7 @@ function SyncMacros(macros)
 end
 
 function SetupMacro(id, macro, index) -- if index is null, a new macro will be created. Macro { icon = <int>, name = <string>, body = <string> }
-  local body = MACRO_PREFIX .. id .. "\n/run -- Test macro is managed by EasyCast. Do not edit it\n" .. macro.body;
+  local body = MACRO_PREFIX .. id .. "\n/run -- This macro is managed by EasyCast. Do not edit it\n" .. macro.body;
   local name = macro.name;
   local icon = macro.icon;
 
