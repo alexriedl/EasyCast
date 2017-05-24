@@ -161,6 +161,69 @@ function FindActionByName(name) -- Returns (Slot ID, Name) if found
   end
 end
 
+--------------------------------
+--    Form Helper Functions   --
+--------------------------------
+ACTIVE_FORM = 0;
+FORMS = {};
+
+function GetCurrentFormIndex()
+  return GetShapeshiftForm();
+end
+
+function IsFormActive(form)
+  if(form == nil or form == 0) then
+    return false;
+  end
+  _, _, active = GetShapeshiftFormInfo(form);
+  return active;
+end
+
+function SwitchToForm(form) -- Returns true if already in correct form
+  if(not form) then
+    printc("Attempted to switch to NULL form", 1, 0, 0);
+    return false;
+  end
+  if(not IsFormActive(form)) then
+    local spell = FORMS[form];
+    CastSpellByName(spell);
+    return false;
+  end
+  return true;
+end
+
+function SwitchToActiveForm() -- Returns true if already in correct form
+  if(not ACTIVE_FORM) then
+    printc("Active form is null -- Unable to switch to it", 1, 0, 0);
+    return false;
+  end
+  return SwitchToForm(ACTIVE_FORM);
+end
+
+function ForceCastFormSpell(form, spell, cost) -- Returns true if desired spell was casted
+  if(cost == nil) then cost = 0 end
+  if(cost > 0 and GetMana() < cost or not IsOffCooldown(spell)) then
+    SwitchToActiveForm();
+    return false;
+  end
+  if(SwitchToForm(form)) then
+    CastSpellByName(spell);
+    return true;
+  end
+  return false;
+end
+
+function SetForm(form)
+  if(not form) then
+    printc("Attempted to set active form to null -- Unable to set active form", 1, 0, 0);
+    return;
+  end
+  ACTIVE_FORM = form;
+  local spell = FORMS[form];
+  printc(spell .. " " .. ((ACTIVE_FORM == form) and "Enabled" or "Disabled"), 1, 1, 0)
+  SwitchToActiveForm()
+end
+
 --------------------------
 -- Action Bar Functions --
 --------------------------
@@ -230,7 +293,7 @@ function GetEasyCastId(body)
   return string.sub(body, MACRO_PREFIX_LENGTH + 1, endOfFirstLine - 1)
 end
 
-function GetMacroIconIndex(name)
+function GetMacroIconIndex(name) -- Helper function to get the texture ID of a macro.
   local index = GetMacroIndexByName(name);
   local n, icon, body = GetMacroInfo(index)
   for iconIndex = 1, GetNumMacroIcons() do

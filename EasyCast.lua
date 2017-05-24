@@ -1,11 +1,11 @@
 local PLAYER_CLASS = UnitClass("player");
 
+local classRegisters = {
+  Warrior = Warrior_SetupMacros,
+  Druid = Druid_SetupMacros,
+};
 local function SetupMacros()
   local macros = {};
-  local classRegisters = {
-    Warrior = Warrior_SetupMacros,
-    Druid = Druid_SetupMacros,
-  };
   if(classRegisters[PLAYER_CLASS]) then
     classRegisters[PLAYER_CLASS](macros);
   end
@@ -17,7 +17,7 @@ local function ChatHandler(msg, editbox)
   local title = "|c00997700";
   local info = "|c00ffffff";
   if(StringNullOrEmpty(msg)) then
-    print(title .. "Usage: " .. info .. "/ec {macrosync | about}");
+    print(title .. "Usage: " .. info .. "/easycast (/ec) {macrosync | about}");
     print(title .. "-macrosync: " .. info .. "Sync EasyCast Macros with player macros");
     print(title .. "-about: " .. info .. "Display information about this addon");
   elseif(msg == "macrosync") then
@@ -35,13 +35,14 @@ SlashCmdList["EASYCAST"] = ChatHandler;
 --        System Setup        --
 --------------------------------
 local RegisteredEvents = {};
+local classOnLoad = {
+  Warrior = Warrior_OnLoad,
+  Druid = Druid_OnLoad,
+};
 function RegisteredEvents.PLAYER_ENTERING_WORLD()
   errorlist = {};
 
   -- Class Setup
-  local classOnLoad = {
-    Warrior = Warrior_OnLoad,
-  };
   if(classOnLoad[PLAYER_CLASS]) then
     classOnLoad[PLAYER_CLASS](errorlist);
   end
