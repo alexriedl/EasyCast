@@ -1,8 +1,4 @@
-function RotationCastTigersFury(startAutoAttack)
-  if(startAutoAttack) then
-    AutoAttack();
-  end
-
+function RotationCastTigersFury()
   tigersFury = "Tiger's Fury"
   if(MissingBuff(tigersFury)) then
     RotationSpellWithCostAndCooldown(tigersFury, 30);
@@ -23,5 +19,6 @@ function RotationCastClaw(startAutoAttack)
 end
 
 function Druid_SetupMacros(macros)
-  macros["druid_claw"]      = { icon = 038, name = " ",         body = "/run RotationCastClaw(true)" };
+  macros["druid_claw"]        = { icon = 038, name = " ",         body = "/run RotationCastClaw(true)" };
+  macros["druid_tigers_fury"] = { icon = 038, name = "  ",        body = "/run RotationCastTigersFury()" };
 end
