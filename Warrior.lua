@@ -64,11 +64,6 @@ local function Warrior_ForceCastStanceSpell(stance, spell, rage) -- Returns true
   end
   return false;
 end
-local function Warrior_RotationSpellWithRageAndCooldown(spell, rage)
-  if(GetRage() >= rage and IsOffCooldown(spell)) then
-    CastSpellByName(spell);
-  end
-end
 
 --------------------------------
 --   Warrior State Functions  --
@@ -99,13 +94,13 @@ function RotationCastOverpower()
   local targetName = GetName("target");
   -- TODO: Dodge checks needed in rotation overpower?
   if(targetName == LAST_TARGET_DODGE_NAME and LAST_TARGET_DODGE_TIME + 5 > GetTime()) then
-    Warrior_RotationSpellWithRageAndCooldown("Overpower", 5);
+    RotationSpellWithCostAndCooldown("Overpower", 5);
     targetName = nil;
   end
 end
 function RotationCastExecute()
   if(GetHealth("target") < 20) then
-    Warrior_RotationSpellWithRageAndCooldown("Execute", 15);
+    RotationSpellWithCostAndCooldown("Execute", 15);
   end
 end
 function RotationCastBloodrage()
@@ -116,33 +111,33 @@ function RotationCastBloodrage()
 end
 function RotationCastBattleShout()
   if(MissingBuff(spell)) then
-    Warrior_RotationSpellWithRageAndCooldown("Battle Shout", 10);
+    RotationSpellWithCostAndCooldown("Battle Shout", 10);
   end
 end
 function RotationCastDemoralizingShout()
   if(DEM_SHOUT_ENABLED and GetHealth("target") > 10 and MissingBuff(spell, "target")) then
-    Warrior_RotationSpellWithRageAndCooldown("Demoralizing Shout", 10);
+    RotationSpellWithCostAndCooldown("Demoralizing Shout", 10);
   end
 end
 function RotationCastRend()
   if(REND_ENABLED and MissingBuff(spell, "target") and GetHealth("target") > 25) then
-    Warrior_RotationSpellWithRageAndCooldown("Rend", 10);
+    RotationSpellWithCostAndCooldown("Rend", 10);
   end
 end
 function RotationCastMortalStrike()
-  Warrior_RotationSpellWithRageAndCooldown("Mortal Strike", 30);
+  RotationSpellWithCostAndCooldown("Mortal Strike", 30);
 end
 function RotationCastSweepingStrikes()
-  Warrior_RotationSpellWithRageAndCooldown("Sweeping Strikes", 30);
+  RotationSpellWithCostAndCooldown("Sweeping Strikes", 30);
 end
 function RotationCastCleave()
-  Warrior_RotationSpellWithRageAndCooldown("Cleave", 20);
+  RotationSpellWithCostAndCooldown("Cleave", 20);
 end
 function RotationCastRevenge()
-  Warrior_RotationSpellWithRageAndCooldown("Revenge", 5);
+  RotationSpellWithCostAndCooldown("Revenge", 5);
 end
 function RotationCastHeroicStrike()
-  Warrior_RotationSpellWithRageAndCooldown("Heroic Strike", 15);
+  RotationSpellWithCostAndCooldown("Heroic Strike", 15);
 end
 
 function ForceCastOverpower()
