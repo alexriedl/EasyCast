@@ -37,6 +37,7 @@ end
 --------------------------------
 function Druid_OnLoad(errorlist)
   -- TODO: This may need to move to spot to only happen once on load
+  -- TODO: Perhaps move this to a stored variable to persist between sessions
   ACTIVE_FORM = GetCurrentFormIndex();
 
   FORMS[0] = "Humaniod"; -- Special Case
@@ -45,7 +46,7 @@ function Druid_OnLoad(errorlist)
   FORMS[3] = "Cat Form";
   FORMS[4] = "Travel Form";
   FORMS[5] = "Moonkin Form";
-  FORMS[6] = "Tree Form";
+  FORMS[6] = "Tree Form"; -- Does this exist in vanilla?
 end
 
 function Druid_SetupMacros(macros)
