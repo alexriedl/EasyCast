@@ -168,7 +168,14 @@ ACTIVE_FORM = 0;
 FORMS = {};
 
 function GetCurrentFormIndex()
-  return GetShapeshiftForm();
+  local num = GetNumShapeshiftForms();
+  for i = 0, num do
+    if(IsFormActive(i)) then
+      return i;
+    end
+  end
+
+  return 0;
 end
 
 function IsFormActive(form)
